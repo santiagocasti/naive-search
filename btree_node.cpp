@@ -6,7 +6,7 @@ const int ASCII_NUM_A = 97;
 
 /**
  * Constructor
- * Initialise the children vector to 50 places
+ * Initialise the children vector to BTREE_SIZE places
  * since it supports only english alphabet in
  * ASCII representation.
  */
@@ -17,7 +17,7 @@ btree_node::btree_node() {
 
 /**
  * Adds a word to the b-tree.
- * The root node has 25 potential children, one for
+ * The root node has BTREE_SIZE potential children, one for
  * each lowercasr letter in the english alphabet.
  *
  * One btree_node would be created per letter of the
