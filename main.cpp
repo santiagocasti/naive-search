@@ -37,6 +37,7 @@ int main() {
     strings.push_back("anacleto");
     strings.push_back("anita");
     strings.push_back("ahora");
+    strings.push_back("ABNORMAL");
 
     btree_node* prefix_tree = new btree_node();
     btree_node* suffix_tree = new btree_node();
