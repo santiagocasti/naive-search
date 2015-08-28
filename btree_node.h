@@ -11,7 +11,7 @@ class btree_node {
 public:
     btree_node();
     bool find(string);
-    void add_word(string);
+    void add_term(string);
     int print(int);
 private:
     int get_index_for_char(char);

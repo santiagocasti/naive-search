@@ -23,7 +23,7 @@ btree_node::btree_node() {
  * One btree_node would be created per letter of the
  * word if there are not created yet (room for optimisation? yes!).
  */
-void btree_node::add_word(string word)
+void btree_node::add_term(string word)
 {
     if (word.length() == 0){
         return;
@@ -39,7 +39,7 @@ void btree_node::add_word(string word)
 
     word = word.erase(0,1);
 
-    this->children[index]->add_word(word);
+    this->children[index]->add_term(word);
 }
 
 /**
