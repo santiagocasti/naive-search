@@ -11,9 +11,10 @@ class search_engine {
     btree_node* prefix_tree;
     btree_node* suffix_tree;
     inverted_index* index;
-    list<pair<int, string>>* document_list;
+    vector<pair<int, string>> *document_list;
     int last_document_id = 1;
 public:
+    search_engine();
     void index_document(string);
     list<int> find(string);
 private:

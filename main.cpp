@@ -2,6 +2,7 @@
 #include <list>
 #include "btree_node.h"
 #include "inverted_index.h"
+#include "search_engine.h"
 
 using namespace std;
 
@@ -23,7 +24,7 @@ string reverse_word(string word){
         reverse[i] = word[word.length() -1 - i];
     }
 
-    cout << "reversed word:" + reverse << endl;
+//    cout << "reversed word:" + reverse << endl;
 
     return reverse;
 }
@@ -43,18 +44,18 @@ int main() {
     btree_node* suffix_tree = new btree_node();
 
 
-    for(std::list<string>::iterator stringListIterator = strings.begin(); stringListIterator != strings.end(); ++stringListIterator){
-        prefix_tree->add_word(*stringListIterator);
-        suffix_tree->add_word(reverse_word(*stringListIterator));
+    for (string &str : strings){
+        prefix_tree->add_term(str);
+        suffix_tree->add_term(reverse_word(str));
     }
 
-    cout << "Printing prefix tree: " << endl;
-    prefix_tree->print(0);
+//    cout << "Printing prefix tree: " << endl;
+//    prefix_tree->print(0);
+//
+//    cout << "Printing suffix tree: " << endl;
+//    suffix_tree->print(0);
 
-    cout << "Printing suffix tree: " << endl;
-    suffix_tree->print(0);
-
-    perform_search(prefix_tree, "antonio");
+//    perform_search(prefix_tree, "antonio");
 
     inverted_index *index = new inverted_index();
     index->add("santiago", 57);
@@ -67,6 +68,14 @@ int main() {
         cout << *it << endl;
     }
 
+    search_engine *s = new search_engine();
+    s->index_document("/Users/santiago/code/naive-search/example.txt");
+    list<int> docIDs = s->find("test");
+
+    cout << "[test] found in: " << endl;
+    for (list<int>::iterator it = docIDs.begin(); it != docIDs.end(); ++it){
+        cout << to_string(*it) + "," << endl;
+    }
 
 
     return 0;
