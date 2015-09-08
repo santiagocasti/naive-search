@@ -1,82 +1,74 @@
 #include <iostream>
 #include <list>
-#include "btree_node.h"
-#include "inverted_index.h"
+#include "trie_node.h"
 #include "search_engine.h"
 
 using namespace std;
 
+/**
+ * Show the menu that allows the user to index documents
+ */
+void handle_files_menu(search_engine *s) {
+    system("clear");
+    cout << "Naive Search Engine" << endl;
+    cout << "Please introduce the full path of the file you would like to index:" << endl;
 
-void perform_search(btree_node* tree, string word){
+    char filepath[500];
+    bool finished = false;
 
-    if (tree->find(word)){
-        cout << "["+word+"] found!" << endl;
-    }else{
-        cout << "["+word+"] not found!" << endl;
+    while (!finished && cin.getline(filepath, 500)) {
+
+        if (strcmp(filepath, "end") == 0){
+            finished = true;
+            continue;
+        }
+
+        s->index_document(filepath);
+        string str(filepath);
+
+        cout << "File [" + str + "] indexed" << endl;
+        cout << "Any more? ['end' to finish]." << endl;
     }
-
 }
 
-string reverse_word(string word){
-    string reverse = string(word);
+/**
+ * Show the menu that allows the user to search for terms
+ */
+void handle_search_menu(search_engine* s) {
+    cout << "Introduce a term to search: " << endl;
+    char word[20];
+    bool finished = false;
 
-    for (int i = 0; i<word.length(); ++i){
-        reverse[i] = word[word.length() -1 - i];
+    while (!finished && cin.getline(word, 20)) {
+        if (strcmp(word, "end") == 0){
+            finished = true;
+            continue;
+        }
+
+        list<int> results = s->find(word);
+        if (results.size() > 0) {
+            cout << "Found in documents:" << endl;
+            for (int docID : results) {
+                cout << s->get_document_name(docID) + "," << endl;
+            }
+        }else{
+            cout << "Term not found in any of the documents." << endl;
+        }
+
+        cout << "Any more? ['end' to finish]." << endl;
     }
-
-//    cout << "reversed word:" + reverse << endl;
-
-    return reverse;
 }
 
-int main() {
-
-    std::list<string> strings;
-    strings.push_back("santiago");
-    strings.push_back("agustin");
-    strings.push_back("antonio");
-    strings.push_back("anacleto");
-    strings.push_back("anita");
-    strings.push_back("ahora");
-    strings.push_back("ABNORMAL");
-
-    btree_node* prefix_tree = new btree_node();
-    btree_node* suffix_tree = new btree_node();
+int main(int argc, char** argv) {
 
 
-    for (string &str : strings){
-        prefix_tree->add_term(str);
-        suffix_tree->add_term(reverse_word(str));
-    }
-
-//    cout << "Printing prefix tree: " << endl;
-//    prefix_tree->print(0);
-//
-//    cout << "Printing suffix tree: " << endl;
-//    suffix_tree->print(0);
-
-//    perform_search(prefix_tree, "antonio");
-
-    inverted_index *index = new inverted_index();
-    index->add("santiago", 57);
-    index->add("santiago", 42);
-
-    list<int>* doc_id_list = index->get_doc_ids("santiago");
-    list<int>::iterator it = doc_id_list->begin();
-
-    for(; it != doc_id_list->end(); ++it){
-        cout << *it << endl;
-    }
+//    /Users/santiago/code/naive-search/example.txt
 
     search_engine *s = new search_engine();
-    s->index_document("/Users/santiago/code/naive-search/example.txt");
-    list<int> docIDs = s->find("test");
 
-    cout << "[test] found in: " << endl;
-    for (list<int>::iterator it = docIDs.begin(); it != docIDs.end(); ++it){
-        cout << to_string(*it) + "," << endl;
-    }
+    handle_files_menu(s);
 
+    handle_search_menu(s);
 
     return 0;
 }
