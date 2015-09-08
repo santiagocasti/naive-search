@@ -6,10 +6,10 @@
 
 using namespace std;
 
-class btree_node {
-    vector <btree_node *> children;
+class trie_node {
+    vector <trie_node *> children;
 public:
-    btree_node();
+    trie_node();
     bool find(string);
     void add_term(string);
     int print(int);
@@ -18,6 +18,5 @@ private:
     char get_char_for_index(int);
     void to_lower_in_place(string*);
 };
-
 
 #endif //WILDCARDSEARCH_BTREE_H

@@ -5,8 +5,8 @@
 using namespace std;
 
 search_engine::search_engine(){
-    this->prefix_tree = new btree_node();
-    this->suffix_tree = new btree_node();
+    this->prefix_tree = new trie_node();
+    this->suffix_tree = new trie_node();
     this->index= new inverted_index();
     this->document_list = new vector<pair<int, string>>();
 }
@@ -20,7 +20,6 @@ void search_engine::index_document(string filename) {
 
     if (doc_id != 0){
         // file already indexed
-        cout << "Doc ID found: " + doc_id << endl;
         return;
     }
 
@@ -105,8 +104,34 @@ int search_engine::get_document_id(string filename) {
  * Index the term associated to the document identifier provided.
  */
 void search_engine::index_term(string term, int doc_id) {
-    this->prefix_tree->add_term(term);
-    this->suffix_tree->add_term(term);
-    this->index->add(term, doc_id);
+
+    bool found = false;
+    if (!this->prefix_tree->find(term)){
+        this->prefix_tree->add_term(term);
+    }
+
+    if (!this->suffix_tree->find(term)){
+        this->suffix_tree->add_term(term);
+    }
+
+    if (this->index->get_doc_ids(term)->size() == 0){
+        this->index->add(term, doc_id);
+    }
+
     cout <<  "[" + term + "] indexed"<< endl;
+}
+
+/**
+ * Return the filepath of the document identified by docID, empty string otherwise.
+ */
+string search_engine::get_document_name(int docID) {
+
+    for ( pair<int, string> document : *this->document_list ){
+        if (document.first == docID){
+            return document.second;
+        }
+    }
+
+    // I strongly dislike this
+    return "";
 }

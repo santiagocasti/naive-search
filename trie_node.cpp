@@ -1,4 +1,4 @@
-#include "btree_node.h"
+#include "trie_node.h"
 #include <iostream>
 
 const int BTREE_SIZE = 25;
@@ -10,9 +10,9 @@ const int ASCII_NUM_A = 97;
  * since it supports only english alphabet in
  * ASCII representation.
  */
-btree_node::btree_node() {
+trie_node::trie_node() {
     // initialise to have one children per letter
-    this->children = vector<btree_node *>(BTREE_SIZE, NULL);
+    this->children = vector<trie_node *>(BTREE_SIZE, NULL);
 }
 
 /**
@@ -20,10 +20,10 @@ btree_node::btree_node() {
  * The root node has BTREE_SIZE potential children, one for
  * each lowercasr letter in the english alphabet.
  *
- * One btree_node would be created per letter of the
+ * One trie_node would be created per letter of the
  * word if there are not created yet (room for optimisation? yes!).
  */
-void btree_node::add_term(string word)
+void trie_node::add_term(string word)
 {
     if (word.length() == 0){
         return;
@@ -34,7 +34,7 @@ void btree_node::add_term(string word)
     int index = this->get_index_for_char(word[0]);
 
     if (this->children[index] == NULL){
-        this->children[index] = new btree_node();
+        this->children[index] = new trie_node();
     }
 
     word = word.erase(0,1);
@@ -45,7 +45,7 @@ void btree_node::add_term(string word)
 /**
  * Find the given word in the btree.
  */
-bool btree_node::find(string word) {
+bool trie_node::find(string word) {
 
     if (word.length() == 0){
         return true;
@@ -68,7 +68,7 @@ bool btree_node::find(string word) {
  * Simple conversion from character to integer.
  * Used for indexing in the children array.
  */
-int btree_node::get_index_for_char(char c){
+int trie_node::get_index_for_char(char c){
         return c - ASCII_NUM_A;
 }
 
@@ -76,14 +76,14 @@ int btree_node::get_index_for_char(char c){
  * Simple conversion from integer to character.
  * Used for printing out the content of the btree.
  */
-char btree_node::get_char_for_index(int n) {
+char trie_node::get_char_for_index(int n) {
     return (char)(n + ASCII_NUM_A);
 }
 
 /**
  * Convert a word to lowercase in place.
  */
-void btree_node::to_lower_in_place(string *word) {
+void trie_node::to_lower_in_place(string *word) {
     transform(word->begin(), word->end(), word->begin(), ::tolower);
 }
 
@@ -97,7 +97,7 @@ void btree_node::to_lower_in_place(string *word) {
  *    hion
  *    t
  */
-int btree_node::print(int depth){
+int trie_node::print(int depth){
 
     int printed = 0;
     bool found = false;
